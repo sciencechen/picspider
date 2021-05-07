@@ -14,7 +14,7 @@ from items import PicspiderItem
 class PicSpiderSpider(scrapy.Spider):
     name = 'pic_spider'
     allowed_domains = ['95mm.net', 'cdn.zzdaye.com']
-    start_urls = ['https://www.95mm.net/4897/17.html#99083']
+    start_urls = ['https://www.95mm.net/4879/2.html']
     picName = 0
     filename = '00.jpg'
     temp_pic_url = []
@@ -33,7 +33,6 @@ class PicSpiderSpider(scrapy.Spider):
 
         # yield图片链接，然后保存
         yield scrapy.Request(pic_url[0], meta={'filename': item['filename']}, callback=self.saveing)
-        print('xxxxxxxx-----------xxxxxxxxxxxxx----完成saveing')
         print(self.temp_pic_url)
         self.temp_pic_url = []
         # 翻页，迭代，寻找下一个图片目标
@@ -41,16 +40,12 @@ class PicSpiderSpider(scrapy.Spider):
         pass
 
     def saveing(self, response):
-        # filename = '00.jpg'
-        # with open(filename, 'wb') as fp:
-        #     fp.write(response.body)
-        #     print('xxxxxxxx-----------xxxxxxxxxxxxx----完成saveing')
-
         # self.picName = uuid.uuid1()
         self.picName = response.meta['filename']
         with open("C:/chenjimiao/project/python/aiTeacherPlan/images3/" + '{}.jpg'.format(self.picName),
                   'wb') as f:
             f.write(response.body)
+            print('xxxxxxxx---------xxxxxxxx---------完成saveing')
 
 
 
