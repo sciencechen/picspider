@@ -14,7 +14,7 @@ from items import PicspiderItem
 class PicSpiderSpider(scrapy.Spider):
     name = 'pic_spider'
     allowed_domains = ['95mm.net', 'cdn.zzdaye.com']
-    start_urls = ['https://www.95mm.net/4873/2.html#98725']
+    start_urls = ['https://www.95mm.net/4897/17.html#99083']
     picName = 0
     filename = '00.jpg'
     temp_pic_url = []
@@ -29,20 +29,15 @@ class PicSpiderSpider(scrapy.Spider):
         item['picurl'] = pic_url[0]
         # yield item
         # yield scrapy.Request(next_url[0], callback=self.parse)
-
-
-
-        self.temp_pic_url.extend(pic_url)
         # yield scrapy.Request(pic_url[0])
-        if len(self.temp_pic_url) > 0 :
-            for url in self.temp_pic_url:
-                yield scrapy.Request(url, meta={'filename': item['filename']}, callback=self.saveing)
-            print('xxxxxxxx-----------xxxxxxxxxxxxx----完成saveing')
-            print(self.temp_pic_url)
-            self.temp_pic_url = []
-            yield scrapy.Request(next_url[0], callback=self.parse)
-        else:
-            yield scrapy.Request(next_url[0], callback=self.parse)
+
+        # yield图片链接，然后保存
+        yield scrapy.Request(pic_url[0], meta={'filename': item['filename']}, callback=self.saveing)
+        print('xxxxxxxx-----------xxxxxxxxxxxxx----完成saveing')
+        print(self.temp_pic_url)
+        self.temp_pic_url = []
+        # 翻页，迭代，寻找下一个图片目标
+        yield scrapy.Request(next_url[0], callback=self.parse)
         pass
 
     def saveing(self, response):
@@ -53,7 +48,7 @@ class PicSpiderSpider(scrapy.Spider):
 
         # self.picName = uuid.uuid1()
         self.picName = response.meta['filename']
-        with open("C:/chenjimiao/project/python/aiTeacherPlan/images2/" + '{}.jpg'.format(self.picName),
+        with open("C:/chenjimiao/project/python/aiTeacherPlan/images3/" + '{}.jpg'.format(self.picName),
                   'wb') as f:
             f.write(response.body)
 
